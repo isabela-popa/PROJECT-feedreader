@@ -102,7 +102,7 @@ $(function () {
             loadFeed(1, () => done());
         });
 
-        it('ensure there is at least a single .entry element within .feed container', function(done) {
+        it('ensure that there is at least a single .entry element within .feed container', function (done) {
             let feedContainer = document.querySelector('.feed');
             let entryElem = feedContainer.getElementsByClassName('entry');
             expect(entryElem.length).toBeGreaterThan(0);
@@ -121,6 +121,28 @@ $(function () {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+        let initialFeedContent;
+
+        beforeEach((done) => {
+            loadFeed(1, () => {
+                let initialFeed = document.querySelector('.feed');
+                initialFeedContent = initialFeed.innerHTML;
+                loadFeed(2, () => {
+                    done();
+                });
+            });
+        });
+
+        it('ensures that the content actually changes when a new feed is loaded', function (done) {
+            let currentFeed = document.querySelector('.feed');
+            let currentFeedContent = currentFeed.innerHTML;
+            expect(initialFeedContent).not.toMatch(currentFeedContent);
+            done();
+        });
+
+        afterEach(() => {
+            loadFeed(0);
+        });
 
     });
 }());
