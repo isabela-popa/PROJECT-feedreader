@@ -81,12 +81,10 @@ $(function () {
          * clicked and does it hide when clicked again.
          */
         it('changes visibility when the menu icon is clicked', function () {
-            let menuIcon = document.querySelector('.menu-icon-link');
-            menuIcon.click();
-            // expect(HTMLbody.classList.contains('menu-hidden')).toBe(false);
+            let menuIconLink = document.querySelector('.menu-icon-link');
+            menuIconLink.click();
             expect(HTMLbody.classList.contains('menu-hidden')).toBeFalsy();
-            menuIcon.click();
-            // expect(HTMLbody.classList.contains('menu-hidden')).toBe(true);
+            menuIconLink.click();
             expect(HTMLbody.classList.contains('menu-hidden')).toBeTruthy();
         });
     });
@@ -100,7 +98,20 @@ $(function () {
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+        beforeEach((done) => {
+            loadFeed(1, () => done());
+        });
 
+        it('ensure there is at least a single .entry element within .feed container', function(done) {
+            let feedContainer = document.querySelector('.feed');
+            let entryElem = feedContainer.getElementsByClassName('entry');
+            expect(entryElem.length).toBeGreaterThan(0);
+            done();
+        });
+
+        afterEach(() => {
+            loadFeed(0);
+        });
     });
 
     /* TODO: Write a new test suite named "New Feed Selection" */
